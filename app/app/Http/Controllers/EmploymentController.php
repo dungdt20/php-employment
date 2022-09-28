@@ -19,7 +19,7 @@ class EmploymentController extends Controller
         // Success
         return response()->json([
             'data' => $data
-        ], Response::HTTP_ACCEPTED);
+        ], Response::HTTP_OK);
     }
 
     public function createEmployment(Request $request) {
@@ -99,7 +99,7 @@ class EmploymentController extends Controller
         : null;
 
         if (is_null($endDate)) {
-            $lastEmployment = !empty($userEmployments) ? $userEmployments[0] : null;
+            $lastEmployment = count($userEmployments) > 0 ? $userEmployments[0] : null;
             if (!is_null($lastEmployment)
             && (is_null($lastEmployment['end_date']) || $lastEmployment['end_date'] >= $startDate)) {
                 return false;
@@ -116,7 +116,7 @@ class EmploymentController extends Controller
                 }
 
                 if ($employmentValue['start_date'] <= $endDate
-                && (!is_null($employmentValue['end_date']) && $employmentValue['end_date'] >= $endDate)) {
+                && (is_null($employmentValue['end_date']) || $employmentValue['end_date'] >= $endDate)) {
                     return false;
                 }
             }
